@@ -919,3 +919,190 @@ function mostrarResultado(aciertos, temasFallados) {
 
 botonComenzar.addEventListener("click", comenzarSimulacro);
 formulario.addEventListener("submit", entregarSimulacro);
+
+// ===== PRÁCTICA DE DECORATOR Y UML =====
+
+const botonEnunciado = document.getElementById("btn-enunciado");
+const problemaDecorator = document.getElementById("problema-decorator");
+
+const botonUml = document.getElementById("btn-uml");
+const solucionDecorator = document.getElementById("solucion-decorator");
+
+const diagramaDecorator = document.getElementById("diagrama-decorator");
+const estadoUml = document.getElementById("estado-uml");
+
+let diagramaDibujado = false;
+let cargandoDiagrama = false;
+let promesaMermaid = null;
+
+// La biblioteca solo se carga cuando se solicita el UML.
+function cargarMermaid() {
+    if (window.mermaid) {
+        return Promise.resolve(window.mermaid);
+    }
+
+    if (promesaMermaid) {
+        return promesaMermaid;
+    }
+
+    promesaMermaid = new Promise((resolve, reject) => {
+        const script = document.createElement("script");
+
+        script.src =
+            "https://cdn.jsdelivr.net/npm/mermaid@11/dist/mermaid.min.js";
+
+        script.onload = () => {
+            if (window.mermaid) {
+                resolve(window.mermaid);
+            } else {
+                script.remove();
+                reject(new Error("No se pudo iniciar Mermaid."));
+            }
+        };
+
+        script.onerror = () => {
+            script.remove();
+            reject(new Error("No se pudo descargar Mermaid."));
+        };
+
+        document.head.appendChild(script);
+    }).catch(error => {
+        // Permite intentar nuevamente si falla la conexión.
+        promesaMermaid = null;
+        throw error;
+    });
+
+    return promesaMermaid;
+}
+
+const codigoUmlDecorator = `
+classDiagram
+    direction TB
+
+    class Bebida {
+        <<interface>>
+        +getDescripcion() String
+        +getPrecio() double
+    }
+
+    class Cafe {
+        +getDescripcion() String
+        +getPrecio() double
+    }
+
+    class BebidaDecorator {
+        <<abstract>>
+        #Bebida bebida
+        +BebidaDecorator(Bebida bebida)
+        +getDescripcion() String
+        +getPrecio() double
+    }
+
+    class ConLeche {
+        +ConLeche(Bebida bebida)
+        +getDescripcion() String
+        +getPrecio() double
+    }
+
+    class ConChocolate {
+        +ConChocolate(Bebida bebida)
+        +getDescripcion() String
+        +getPrecio() double
+    }
+
+    Bebida <|.. Cafe
+    Bebida <|.. BebidaDecorator
+
+    BebidaDecorator <|-- ConLeche
+    BebidaDecorator <|-- ConChocolate
+
+    BebidaDecorator --> "1" Bebida : envuelve
+`;
+
+botonEnunciado.addEventListener("click", () => {
+    const mostrar = problemaDecorator.hidden;
+
+    problemaDecorator.hidden = !mostrar;
+
+    botonEnunciado.textContent = mostrar
+        ? "Ocultar enunciado"
+        : "Mostrar enunciado";
+
+    botonEnunciado.setAttribute(
+        "aria-expanded",
+        String(mostrar)
+    );
+});
+
+botonUml.addEventListener("click", async () => {
+    if (cargandoDiagrama) {
+        return;
+    }
+
+    const mostrar = solucionDecorator.hidden;
+
+    solucionDecorator.hidden = !mostrar;
+
+    botonUml.textContent = mostrar
+        ? "Ocultar UML y explicación"
+        : "Ver UML y explicación";
+
+    botonUml.setAttribute(
+        "aria-expanded",
+        String(mostrar)
+    );
+
+    if (!mostrar || diagramaDibujado) {
+        return;
+    }
+
+    cargandoDiagrama = true;
+    botonUml.disabled = true;
+    estadoUml.textContent = "Cargando diagrama UML…";
+
+    try {
+        const mermaid = await cargarMermaid();
+
+        mermaid.initialize({
+            startOnLoad: false,
+            theme: "dark",
+            securityLevel: "strict"
+        });
+
+        const renderizado = await mermaid.render(
+            "uml-decorator-svg",
+            codigoUmlDecorator
+        );
+
+        diagramaDecorator.innerHTML = renderizado.svg;
+
+        if (renderizado.bindFunctions) {
+            renderizado.bindFunctions(diagramaDecorator);
+        }
+
+        diagramaDibujado = true;
+        estadoUml.textContent = "";
+    } catch (error) {
+        estadoUml.textContent =
+            "No se pudo cargar el diagrama. Comprueba tu conexión. " +
+            "Puedes leer las explicaciones y volver a abrir esta sección " +
+            "para intentarlo nuevamente.";
+    } finally {
+        cargandoDiagrama = false;
+        botonUml.disabled = false;
+    }
+});
+
+botonEnunciado.setAttribute(
+    "aria-controls",
+    "problema-decorator"
+);
+
+botonEnunciado.setAttribute("aria-expanded", "false");
+
+botonUml.setAttribute(
+    "aria-controls",
+    "solucion-decorator"
+);
+
+botonUml.setAttribute("aria-expanded", "false");

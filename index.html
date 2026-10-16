@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="es">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -7,6 +8,7 @@
     <link rel="stylesheet" href="styles.css">
     <script src="script.js" defer></script>
 </head>
+
 <body>
     <main class="contenedor">
         <header>
@@ -67,16 +69,212 @@
             </form>
         </section>
 
-        <section id="resultado" class="tarjeta" hidden
-                 aria-live="polite">
+        <section id="resultado" class="tarjeta" hidden aria-live="polite">
+        </section>
+
+        <!-- Nueva seccion-->
+        <section class="tarjeta">
+            <span class="etiqueta">PRÁCTICA DE UML</span>
+            <h2>Analiza un problema de diseño</h2>
+
+            <p>
+                Lee el enunciado e intenta imaginar las clases y sus relaciones.
+                Después puedes consultar el UML explicado.
+            </p>
+
+            <button id="btn-enunciado" type="button">
+                Mostrar enunciado
+            </button>
+
+            <div id="problema-decorator" hidden>
+                <h3>Problema: sistema de pedidos de una cafetería</h3>
+
+                <p>
+                    Una cafetería vende café a S/ 5. Cada bebida permite consultar
+                    su descripción y precio.
+                </p>
+
+                <p>
+                    Los clientes pueden agregar leche por S/ 2 y chocolate por
+                    S/ 3. Estos extras deben poder combinarse y agregarse
+                    sucesivamente, sin modificar la clase del café ni crear
+                    una clase para cada combinación posible.
+                </p>
+
+                <p>
+                    Diseñe una solución utilizando el patrón Decorator.
+                    Represente sus clases, atributos, métodos y relaciones
+                    en un diagrama UML.
+                </p>
+
+                <button id="btn-uml" type="button">
+                    Ver UML y explicación
+                </button>
+
+                <div id="solucion-decorator" hidden>
+                    <h3>Diagrama UML</h3>
+
+                    <p class="nota-uml">
+                        El diagrama usa Mermaid y requiere conexión a Internet
+                        para cargar la biblioteca.
+                    </p>
+
+                    <p id="estado-uml" role="status"></p>
+
+                    <div class="diagrama-scroll">
+                        <div id="diagrama-decorator"></div>
+                    </div>
+
+                    <h3>¿Por qué están esas flechas?</h3>
+
+                    <div class="explicacion">
+                        <strong>1. Cafe → Bebida: implementación</strong>
+
+                        <p>
+                            Es una línea discontinua con un triángulo vacío
+                            apuntando a Bebida. Representa:
+                        </p>
+
+                        <pre><code>class Cafe implements Bebida</code></pre>
+
+                        <p>
+                            Cafe debe implementar getDescripcion() y getPrecio(),
+                            porque están declarados en Bebida.
+                            El triángulo apunta a la interfaz que se implementa.
+                        </p>
+                    </div>
+
+                    <div class="explicacion">
+                        <strong>
+                            2. BebidaDecorator → Bebida: implementación
+                        </strong>
+
+                        <p>
+                            También es una línea discontinua con un triángulo
+                            vacío apuntando a Bebida. Representa:
+                        </p>
+
+                        <pre><code>abstract class BebidaDecorator implements Bebida</code></pre>
+
+                        <p>
+                            Esto permite utilizar un decorador donde se espera
+                            una Bebida, igual que ocurre con Cafe.
+                        </p>
+                    </div>
+
+                    <div class="explicacion">
+                        <strong>
+                            3. ConLeche y ConChocolate → BebidaDecorator: herencia
+                        </strong>
+
+                        <p>
+                            Son líneas continuas con triángulos vacíos
+                            apuntando a BebidaDecorator. Representan:
+                        </p>
+
+                        <pre><code>class ConLeche extends BebidaDecorator
+class ConChocolate extends BebidaDecorator</code></pre>
+
+                        <p>
+                            Ambas clases heredan la referencia a la bebida
+                            y el comportamiento del decorador base.
+                            Después redefinen los métodos para agregar su extra.
+                            El triángulo apunta a la clase padre.
+                        </p>
+                    </div>
+
+                    <div class="explicacion">
+                        <strong>
+                            4. BebidaDecorator → Bebida: asociación
+                        </strong>
+
+                        <p>
+                            Es una línea continua con una flecha simple hacia
+                            Bebida. Representa el atributo:
+                        </p>
+
+                        <pre><code>protected Bebida bebida;</code></pre>
+
+                        <p>
+                            Cada decorador guarda una referencia a la bebida
+                            que envuelve. El número 1 indica que cada decorador
+                            del modelo envuelve una bebida.
+                        </p>
+
+                        <p>
+                            Apunta a Bebida porque el objeto envuelto puede
+                            ser un Cafe o cualquier otro decorador.
+                            Así se pueden combinar los extras.
+                        </p>
+
+                        <p>
+                            Usamos una asociación simple: el enunciado no
+                            establece reglas de propiedad exclusiva ni de
+                            ciclo de vida que requieran un rombo de composición.
+                        </p>
+                    </div>
+
+                    <div class="explicacion">
+                        <strong>
+                            ¿Por qué hay dos relaciones entre BebidaDecorator y Bebida?
+                        </strong>
+
+                        <p>
+                            Porque representan cosas diferentes:
+                            BebidaDecorator <strong>es una Bebida</strong>
+                            al implementar su interfaz y, además,
+                            <strong>contiene una referencia a otra Bebida</strong>.
+                            Esa combinación permite construir la cadena.
+                        </p>
+                    </div>
+
+                    <h3>Ejemplo de combinación</h3>
+
+                    <pre><code>Bebida pedido =
+    new ConChocolate(
+        new ConLeche(
+            new Cafe()
+        )
+    );</code></pre>
+
+                    <p>
+                        Chocolate envuelve a leche, y leche envuelve al café.
+                        El precio se calcula como 5 + 2 + 3 = S/ 10.
+                    </p>
+
+                    <h3>Símbolos utilizados</h3>
+
+                    <ul class="leyenda-uml">
+                        <li><strong>+</strong>: miembro público.</li>
+                        <li><strong>#</strong>: miembro protegido.</li>
+                        <li>
+                            <strong>«interface»</strong>: interfaz.
+                        </li>
+                        <li>
+                            <strong>«abstract»</strong>: clase abstracta.
+                        </li>
+                        <li>
+                            <strong>Triángulo vacío + línea discontinua</strong>:
+                            implementación de una interfaz.
+                        </li>
+                        <li>
+                            <strong>Triángulo vacío + línea continua</strong>:
+                            herencia de una clase.
+                        </li>
+                        <li>
+                            <strong>Flecha simple + línea continua</strong>:
+                            asociación navegable.
+                        </li>
+                    </ul>
+                </div>
+            </div>
         </section>
 
         <footer>
-            Preguntas de práctica: no son las preguntas reales del examen.
-            Factory sigue el enfoque de tu clase: fábrica simple con
-            método estático. Este simulador evalúa únicamente teoría;
-            no incluye los 12 puntos de UML y Java.
+            El simulacro califica la teoría sobre 8 puntos.
+            La práctica de UML es una actividad de consulta sin calificación.
         </footer>
     </main>
 </body>
+
 </html>

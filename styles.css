@@ -224,6 +224,90 @@ footer {
     line-height: 1.7;
 }
 
+#problema-decorator,
+#solucion-decorator {
+    margin-top: 25px;
+}
+
+#problema-decorator h3 {
+    margin-top: 28px;
+    line-height: 1.5;
+}
+
+#btn-uml {
+    margin-top: 10px;
+    background: #a9c8ff;
+    color: #12223b;
+}
+
+#btn-uml:hover {
+    background: #c5daff;
+}
+
+.diagrama-scroll {
+    overflow-x: auto;
+    margin: 20px 0;
+    padding: 20px;
+    border: 1px solid #465570;
+    border-radius: 12px;
+    background: #131c2c;
+}
+
+#diagrama-decorator {
+    min-width: 680px;
+    text-align: center;
+}
+
+#diagrama-decorator svg {
+    display: block;
+    width: 100%;
+    height: auto;
+    margin: auto;
+}
+
+.nota-uml,
+#estado-uml {
+    font-size: 13px;
+}
+
+#estado-uml {
+    color: #ffd479;
+}
+
+pre {
+    overflow-x: auto;
+    padding: 16px;
+    border-radius: 10px;
+    background: #101522;
+    color: #c9e4ff;
+    line-height: 1.6;
+    font-size: 14px;
+}
+
+.leyenda-uml {
+    padding-left: 22px;
+    color: #bdc8dc;
+    line-height: 1.8;
+}
+
+/* Los colores de corrección prevalecen sobre la selección. */
+.opcion.correcta,
+.opcion.correcta:has(input:checked) {
+    border-color: #b8ef83;
+    background: #263f2e;
+}
+
+.opcion.incorrecta,
+.opcion.incorrecta:has(input:checked) {
+    border-color: #ff9b9b;
+    background: #472c37;
+}
+
+/* Evita mostrar el cursor de selección al finalizar. */
+.opcion:has(input:disabled) {
+    cursor: default;
+}
+
 @media (max-width: 500px) {
     .contenedor {
         padding: 28px 14px;
