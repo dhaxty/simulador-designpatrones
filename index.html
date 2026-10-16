@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Simulador — Diseño de Patrones</title>
+    <link rel="stylesheet" href="styles.css">
+    <script src="script.js" defer></script>
+</head>
+<body>
+    <main class="contenedor">
+        <header>
+            <span class="etiqueta">JAVA · SEMANAS 6–9</span>
+            <h1>Diseño de Patrones</h1>
+            <p>Practica la parte teórica de tu examen.</p>
+        </header>
+
+        <section id="inicio" class="tarjeta">
+            <h2>Simulador de teoría</h2>
+
+            <div class="estadisticas">
+                <div>
+                    <strong>33</strong>
+                    <span>preguntas disponibles</span>
+                </div>
+                <div>
+                    <strong>4</strong>
+                    <span>preguntas por intento</span>
+                </div>
+                <div>
+                    <strong>8</strong>
+                    <span>puntos como máximo</span>
+                </div>
+            </div>
+
+            <p>
+                Cada respuesta correcta vale <strong>2 puntos</strong>.
+                Las incorrectas no restan.
+            </p>
+
+            <p>
+                Incluye Singleton, Prototype, Factory, Abstract Factory,
+                Builder, Adapter, Facade, Decorator y Composite.
+            </p>
+
+            <button id="btn-comenzar" type="button">
+                Comenzar simulacro
+            </button>
+        </section>
+
+        <section id="examen" hidden>
+            <div class="barra-examen">
+                <span id="progreso-texto">0 de 4 respondidas</span>
+                <span id="tiempo">Tiempo: 00:00</span>
+            </div>
+
+            <progress id="progreso" value="0" max="4"></progress>
+
+            <form id="formulario">
+                <div id="preguntas"></div>
+
+                <p id="aviso" role="status"></p>
+
+                <button id="btn-entregar" type="submit">
+                    Entregar respuestas
+                </button>
+            </form>
+        </section>
+
+        <section id="resultado" class="tarjeta" hidden
+                 aria-live="polite">
+        </section>
+
+        <footer>
+            Preguntas de práctica: no son las preguntas reales del examen.
+            Factory sigue el enfoque de tu clase: fábrica simple con
+            método estático. Este simulador evalúa únicamente teoría;
+            no incluye los 12 puntos de UML y Java.
+        </footer>
+    </main>
+</body>
+</html>
